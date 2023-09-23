@@ -15,20 +15,30 @@ font_color="#4F7B4F"
 pyglet.font.add_file("/home/juliapaiva/Documents/Py_estudo/fonts/Ubuntu-Bold.ttf")
 pyglet.font.add_file("/home/juliapaiva/Documents/Py_estudo/fonts/Shanti-Regular.ttf")
 
+# initiallize app
+root = tk.Tk()
+root.title("Plant library")
+root.eval("tk::PlaceWindow . center")
+
+#create a frame
+frame1 = tk.Frame(root, width=window_width, height=window_height, bg=window_bg)
+frame1.grid(row=6, column=4)
+frame2 = tk.Frame(root, bg=window_bg)
+frame2.grid(row= 6, column=4)
+frame3 = tk.Frame(root, bg=window_bg)
+frame3.grid(row= 6, column=4)
+
+
+ # configure the grid
+frame2.columnconfigure(0, weight=1)
+frame2.columnconfigure(2, weight=1)
+frame2.rowconfigure(0, weight=1)
+frame2.rowconfigure(3, weight=1)
+
+
 def clear_widgets(frame):
     for widget in frame.winfo_children():
         widget.destroy()
-
-def fetch_db():
-    connection = sqlite3.connect("/home/juliapaiva/Documents/Py_estudo/data/marantas_new.db")
-    cursor = connection.cursor()
-    name_table = "marantas"
-    cursor.execute(f"pragma table_info({name_table})")
-    column = cursor.fetchall()
-
-    for column in column:
-        name_column = column[1]
-        print(name_column)
 
 def load_frame1():
 
@@ -60,17 +70,11 @@ def load_frame1():
             ).pack(pady=20)
     
 def load_frame2():
-           
-    frame2 = tk.Frame(root, bg=window_bg)
-    frame2.grid(row= 6, column=4)
-
-     # configure the grid
-    frame2.columnconfigure(0, weight=1)
-    frame2.columnconfigure(2, weight=1)
-    frame2.rowconfigure(0, weight=1)
-    frame2.rowconfigure(3, weight=1)
 
     clear_widgets(frame1)
+
+    frame2.tkraise()
+    frame2.pack_propagate(False)
 
     maranta_img=ImageTk.PhotoImage(file="/home/juliapaiva/Documents/Py_estudo/assets/logo_image.png")
     maranta_widget = tk.Label(frame2, image = maranta_img, bg=window_bg) 
@@ -101,7 +105,6 @@ def load_frame2():
             activeforeground=font_color,
             command= lambda:load_frame4()
             ).grid(row=2,column=3, pady = 2)
-    #tk.Button.pack(pady=20)
     
     peperomia_img=ImageTk.PhotoImage(file="/home/juliapaiva/Documents/Py_estudo/assets/logo_image.png")
     peperomia_widget = tk.Label(frame2, image = peperomia_img, bg=window_bg) 
@@ -117,25 +120,40 @@ def load_frame2():
             activeforeground=font_color,
             command= lambda:load_frame5()
             ).grid(row=5,column=3, pady = 2)
-    #tk.Button.pack(pady=20)
 
 def load_frame3():
-    print("Maranta carai")
+
+    global frame2
+    clear_widgets(frame2)
+
+    frame3.tkraise()
+    frame3.pack_propagate(False)
+
+    maranta_img=ImageTk.PhotoImage(file="/home/juliapaiva/Documents/Py_estudo/assets/logo_image.png")
+    maranta_widget = tk.Label(frame3, image = maranta_img, bg=window_bg) 
+    maranta_widget.image=maranta_img
+    maranta_widget.grid(row=0,columnspan=4, pady = 2)
+    
+    tk.Label(frame3,
+            text="Maranta",bg=window_bg,
+            fg=font_color, 
+            font=("Shanti", 25)
+            ).grid(row=1,column=0,sticky="s")
+    
+    connection = sqlite3.connect("/home/juliapaiva/Documents/Py_estudo/plants_new.db")
+    cursor = connection.cursor()
+    cursor.execute("SELECT Maranta from plants")
+    table_records = cursor.fetchall()
+    print (table_records)
+    
 
 def load_frame4():
-    print("Hoya carai")
+    print("Hoya")
 
 def load_frame5():
-    print("Peperomia carai")
+    print("Peperomia")
 
-# initiallize app
-root = tk.Tk()
-root.title("Plant library")
-root.eval("tk::PlaceWindow . center")
 
-#create a frame
-frame1 = tk.Frame(root, width=window_width, height=window_height, bg=window_bg)
-frame1.grid(row=6, column=4)
 
 
 load_frame1()
